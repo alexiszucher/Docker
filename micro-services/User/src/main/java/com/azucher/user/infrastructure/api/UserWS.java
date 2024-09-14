@@ -17,6 +17,7 @@ public class UserWS {
         Set<UserResponseHttp> users = new HashSet<>();
         users.add(new UserResponseHttp("John", "Doe"));
         users.add(new UserResponseHttp("Jane", "Doe"));
+        users.add(new UserResponseHttp("Jack", "Done"));
         return ResponseEntity.ok(users);
     }
 
