@@ -11,7 +11,7 @@ FROM eclipse-temurin:22-jdk as runtime
 
 WORKDIR /app
 
-COPY --from=build /app/target/User-0.0.2-SNAPSHOT.jar /app/app.jar
+COPY --from=build /app/target/*.jar /app/app.jar
 
 EXPOSE 8080
 
