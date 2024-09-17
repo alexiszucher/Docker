@@ -15,10 +15,24 @@ public class UserWS {
     @GetMapping
     public ResponseEntity<Set<UserResponseHttp>> getUsers() {
         Set<UserResponseHttp> users = new HashSet<>();
-        users.add(new UserResponseHttp("John", "Doe"));
-        users.add(new UserResponseHttp("Jane", "Doe"));
-        users.add(new UserResponseHttp("Jack", "Done"));
+        users.add(buildUserHttpResponse("John", "Doe"));
+        users.add(buildUserHttpResponse("Jane", "Doe"));
+        users.add(buildUserHttpResponse("Jack", "Done"));
         return ResponseEntity.ok(users);
+    }
+
+    private UserResponseHttp buildUserHttpResponse(String firstName, String lastName) {
+        return new UserResponseHttp() {
+            @Override
+            public String firstname() {
+                return firstName;
+            }
+
+            @Override
+            public String lastname() {
+                return lastName;
+            }
+        };
     }
 
 }
