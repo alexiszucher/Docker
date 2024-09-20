@@ -1,0 +1,52 @@
+services:
+
+  mongo:
+    # Nom du conteneur
+    container_name: mongo
+    # Image que le conteneur va utiliser
+    image: 'mongo'
+    # Liste des volumes
+    volumes:
+      - data:/data/db
+
+    # 1re façon de faire les variables d'environnement
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: alexis
+      # MONGO_INITDB_ROOT_PASSWORD: alexis
+
+    # 2e façon de faire les variables d'environnement
+    env_file:
+      - ./env/mongo.env
+
+    # Pas besoin de network car tous les services d'un fichier compose seront relié par un network créé automatiquement
+    # Nous pouvons quand même ajouter l'options networks si nous le souhaitons pour non seulement l'ajouter au network par défaut,
+    # mais aussi au network demandé dans l'option
+
+  backend:
+    # Nous pouvons préciser que Docker Compose doit build une image à partir de DockerFile avant se trouvant dans le dosier backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+
+volumes:
+  data:
+  logs:

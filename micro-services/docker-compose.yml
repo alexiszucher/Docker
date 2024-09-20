@@ -1,0 +1,16 @@
+services:
+  ms-user:
+    container_name: ms-user
+    build:
+      context: ./User
+    ports:
+      - 3000:8080
+
+  frontend:
+    container_name: ms-front
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 4200:4200
