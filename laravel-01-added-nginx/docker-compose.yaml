@@ -1,0 +1,43 @@
+services:
+
+  server:
+    image: 'nginx:stable-alpine'
+    ports: 
+      - '8000:80'
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+      - mysql
+
+  php:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+    volumes:
+      # Delegated à la fin permet de transmettre les données à la machine hôte par lot et non pas instantanément.
+      # Cela augmente les performances et nous n'avons pas le besoin d'avoir instantanément les données dans la machine hôte.
+      - ./src:/var/www/html:delegated
+    command: sh -c "chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && php-fpm"
+
+  mysql:
+    image: mysql:9.0
+    container_name: mysql
+    env_file:
+      - ./env/mysql.env
+
+  composer:
+    build:
+      context: ./dockerfiles
+      dockerfile: composer.dockerfile
+    volumes:
+      - ./src:/var/www/html
+
+  artisan:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+    volumes:
+      - ./src:/var/www/html
+    entrypoint: ["php", "/var/www/html/artisan"]
