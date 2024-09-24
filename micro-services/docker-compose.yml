@@ -13,3 +13,5 @@ services:
       - ./frontend/src:/app/src
     ports:
       - 4200:4200
+    depends_on:
+      - ms-user
