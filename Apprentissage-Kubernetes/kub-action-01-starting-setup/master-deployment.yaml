@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: second-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: 'TCP'
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  replicas: 3
+  selector:
+    # matchExpressions:
+    # - key: app
+    # values:
+    # - second-app
+    # operator: In
+    matchLabels:
+      app: second-app
+  template:
+    metadata:
+      labels:
+        app: second-app
+    spec:
+      containers:
+        - name: container-second-app
+          image: azucher/kub-first-app
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /
+            periodSeconds: 10
+            initialDelaySeconds: 5

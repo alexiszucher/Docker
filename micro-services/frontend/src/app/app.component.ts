@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import User from "../domain/User";
+import RepositoryRegistry from "../RepositoryRegistry";
 
 @Component({
   selector: 'app-root',
@@ -10,4 +12,11 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'frontend';
+  users: User[] = [];
+
+  constructor() {
+    RepositoryRegistry.userRepository().findUsers().then((users: User[]) => {
+      this.users = users;
+    });
+  }
 }
