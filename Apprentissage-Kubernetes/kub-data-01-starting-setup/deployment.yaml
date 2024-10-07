@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: story-template
+  template:
+    metadata:
+      labels:
+        app: story-template
+    spec:
+      containers:
+        - name: story
+          image: azucher/kub-data:2
+          env:
+            - name: STORY_FOLDER
+              valueFrom:
+                configMapKeyRef:
+                  key: folder
+                  name: data-env
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
+            # emptyDir: { }
+            # hostPath:
+          # path: /data
+          # type: DirectoryOrCreate
