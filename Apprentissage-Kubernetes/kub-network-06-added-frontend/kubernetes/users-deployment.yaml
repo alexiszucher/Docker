@@ -15,8 +15,7 @@ spec:
       containers:
         - name: users
           image: azucher/kub-demo-users:latest
-          imagePullPolicy: Always
           env:
             - name: AUTH_ADDRESS
-              # value: "10.103.103.113"
+              # value: "10.99.104.252"
               value: "auth-service.default"
